@@ -1,8 +1,10 @@
-import { useContext } from "react";
-import Image from "next/image";
+//components
+import Image from 'next/image';
 
-import { Context } from "../context";
-import default_user_image from "../public/images/default_user_image.jpg";
+//utils
+import { useContext } from 'react';
+import { Context } from '../context';
+import default_user_image from '../public/images/default_user_image.jpg';
 
 const UserInfoTemplate = () => {
   const {
@@ -10,7 +12,7 @@ const UserInfoTemplate = () => {
   } = useContext(Context);
 
   return (
-    <div className="flex flex-col items-center m-8 bg-gray-100 rounded-xl p-8">
+    <div className="flex flex-col items-center   p-8">
       <Image
         src={default_user_image}
         width={125}

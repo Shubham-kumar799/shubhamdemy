@@ -1,26 +1,25 @@
-import { useEffect, useState, useContext } from "react";
-import { useRouter } from "next/router";
+//components
+import { Spin } from 'antd';
 
-import { SyncOutlined } from "@ant-design/icons";
-import axios from "axios";
-import { Context } from "../../context";
+//utils
+import { useEffect, useState, useContext } from 'react';
+import axios from 'axios';
+import { Context } from '../../context';
 
 const CheckUser = ({ children }) => {
   const [ok, setOk] = useState(false);
 
-  const router = useRouter();
-
-  const { state, dispatch } = useContext(Context);
-  const { user } = state;
+  const { dispatch } = useContext(Context);
 
   const fetchUser = async () => {
     try {
-      const { data } = await axios.get("/api/current-user");
+      const { data } = await axios.get('/api/current-user');
       if (data.ok) setOk(true);
     } catch (error) {
-      console.log("Error fetching user", error);
+      console.log('Error fetching user', error);
+      setOk(false);
       dispatch({
-        type: "LOGOUT",
+        type: 'LOGOUT',
       });
     }
   };
@@ -35,7 +34,7 @@ const CheckUser = ({ children }) => {
         <>{children}</>
       ) : (
         <div className="flex items-center justify-center h-screen">
-          <SyncOutlined spin className="text-3xl" />
+          <Spin className="text-3xl" />
         </div>
       )}
     </>

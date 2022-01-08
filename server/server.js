@@ -1,11 +1,11 @@
-const { readdirSync } = require("fs");
-const express = require("express");
-const cors = require("cors");
-const morgan = require("morgan");
-const mongoose = require("mongoose");
-const csrf = require("csurf");
-const cookieParser = require("cookie-parser");
-require("dotenv").config();
+const { readdirSync } = require('fs');
+const express = require('express');
+const cors = require('cors');
+const morgan = require('morgan');
+const mongoose = require('mongoose');
+const csrf = require('csurf');
+const cookieParser = require('cookie-parser');
+require('dotenv').config();
 
 // CSRF setup
 const csrfProtection = csrf({ cookie: true });
@@ -15,16 +15,16 @@ const port = process.env.PORT || 8000;
 
 // CONNECTING TO DATABASE
 mongoose
-  .connect(process.env.DATABASE_CONNECTION_URL, {
+  .connect(process.env.NEW_DATABASE_CONNECTION_URL, {
     useNewUrlParser: true,
     // useFindAndModify: false,
     useUnifiedTopology: true,
     // useCreateIndex: false,
   })
   .then(() => {
-    console.log("db connected");
+    console.log('**db connected**');
   })
-  .catch(e => console.log("Db connecting error", e));
+  .catch(e => console.log('Db connecting error', e));
 
 // EXPRESS APP
 const app = express();
@@ -33,16 +33,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
-app.use(morgan("dev"));
+app.use(morgan('dev'));
 
 // ROUTES
-readdirSync("./routes").map(r => app.use("/api", require(`./routes/${r}`)));
+readdirSync('./routes').map(r => app.use('/api', require(`./routes/${r}`)));
 
 // csrf
 app.use(csrfProtection);
 
 // csrf route
-app.get("/api/csrf-token", (req, res) => {
+app.get('/api/csrf-token', (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 

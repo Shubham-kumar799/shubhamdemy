@@ -1,4 +1,5 @@
-import Link from "next/link";
+//components
+import Link from 'next/link';
 
 const AppLink = ({ title }) => {
   return (

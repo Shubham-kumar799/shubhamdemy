@@ -1,6 +1,10 @@
-import { useReducer, createContext, useEffect } from "react";
-import axios from "axios";
-import { useRouter } from "next/router";
+//components
+import { message } from 'antd';
+
+//utils
+import { useReducer, createContext, useEffect } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 
 const initialState = {
   user: null,
@@ -10,10 +14,10 @@ const Context = createContext();
 
 const rootReducer = (state, action) => {
   switch (action.type) {
-    case "LOGIN":
+    case 'LOGIN':
       return { ...state, user: action.payload };
 
-    case "LOGOUT":
+    case 'LOGOUT':
       return { ...state, user: null };
 
     default:
@@ -28,18 +32,37 @@ const Provider = ({ children }) => {
   const { user } = state;
   const router = useRouter();
 
+  const success = ({ msg }) => {
+    message.success(msg);
+  };
+
+  const error = ({ msg }) => {
+    message.error(msg);
+  };
+
   useEffect(() => {
     dispatch({
-      type: "LOGIN",
-      payload: JSON.parse(window.localStorage.getItem("user")),
+      type: 'LOGIN',
+      payload: JSON.parse(window.localStorage.getItem('user')),
     });
   }, []);
 
   useEffect(() => {
-    if (!user) router.push("/login");
+    if (!user) {
+      axios
+        .get('/api/logout')
+        .then(data => {
+          dispatch({ type: 'LOGOUT' });
+          window.localStorage.removeItem('user');
+          router.push('/login');
+        })
+        .catch(err => {
+          console.log('force logout error', err);
+        });
+    }
   }, [user]);
 
-  // handling expries token
+  // handling expired token
   axios.interceptors.response.use(
     function (response) {
       return response;
@@ -49,15 +72,15 @@ const Provider = ({ children }) => {
       if (res.status === 401 && res.config && !res.config._isRetryRequest) {
         return new Promise((resolve, reject) => {
           axios
-            .get("/api/logout")
+            .get('/api/logout')
             .then(data => {
-              console.log("/401 error > logout");
-              dispatch({ type: "LOGOUT" });
-              window.localStorage.removeItem("user");
-              router.push("/login");
+              console.log('/401 error > logout');
+              dispatch({ type: 'LOGOUT' });
+              window.localStorage.removeItem('user');
+              router.push('/login');
             })
             .catch(err => {
-              console.log("axios interceptors error", err);
+              console.log('axios interceptors error', err);
               reject(error);
             });
         });
@@ -68,15 +91,17 @@ const Provider = ({ children }) => {
 
   useEffect(() => {
     const getCsrfToken = async () => {
-      const { data } = await axios.get("/api/csrf-token");
-      axios.defaults.headers["X-CSRF-Token"] = data.getCsrfToken;
+      const { data } = await axios.get('/api/csrf-token');
+      axios.defaults.headers['X-CSRF-Token'] = data.getCsrfToken;
     };
 
     getCsrfToken();
   }, []);
 
   return (
-    <Context.Provider value={{ state, dispatch }}>{children}</Context.Provider>
+    <Context.Provider value={{ state, dispatch, success, error }}>
+      {children}
+    </Context.Provider>
   );
 };
 

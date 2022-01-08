@@ -1,14 +1,8 @@
-import CheckUser from "../../components/wrappers/CheckUser";
-import UserInfoTemplate from "../../components/UserInfoTemplate";
+//components
+import UserDashboard from '../../components/UserDashboard';
 
 const UserIndex = () => {
-  return (
-    <CheckUser>
-      <div className="flex items-center justify-center">
-        <UserInfoTemplate />
-      </div>
-    </CheckUser>
-  );
+  return <UserDashboard />;
 };
 
 export default UserIndex;

@@ -1,4 +1,5 @@
-import AppButton from "./ui/AppButton";
+//components
+import AppButton from './ui/AppButton';
 
 const FooterTop = () => {
   return (
@@ -12,7 +13,7 @@ const FooterTop = () => {
             Learn from the best instructor from across the globe
           </h2>
         </div>
-        <AppButton title={"Get Started"} />
+        <AppButton title={'Get Started'} />
       </div>
     </div>
   );

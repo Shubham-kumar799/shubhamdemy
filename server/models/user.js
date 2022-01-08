@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const userSchema = new Schema(
@@ -22,18 +22,22 @@ const userSchema = new Schema(
     },
     userimage: {
       type: String,
-      default: "/avatar.png",
+      default: '/avatar.png',
     },
     role: {
       type: [String],
-      default: ["Subscriber"],
-      enum: ["Subscriber", "Instructor", "Admin"],
+      default: ['Subscriber'],
+      enum: ['Subscriber', 'Instructor', 'Admin'],
     },
-    stripe_account_id: "",
+    stripe_account_id: '',
     stripe_seller: {},
     stripeSession: {},
+    passwordResetCode: {
+      data: String,
+      default: '',
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model('User', userSchema);
