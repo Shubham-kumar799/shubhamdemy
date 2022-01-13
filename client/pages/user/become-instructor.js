@@ -1,10 +1,15 @@
+//NOT_COMPLETED
+
 //components
-import { Button, Spin } from 'antd';
+import { Button } from 'antd';
 
 //utils
 import { useContext, useState } from 'react';
 import { Context } from '../../context';
 import axios from 'axios';
+
+//icons
+import { LoadingOutlined, CreditCardOutlined } from '@ant-design/icons';
 
 const BecomeInstructor = () => {
   const [loading, setLoading] = useState(false);
@@ -36,10 +41,17 @@ const BecomeInstructor = () => {
         account
       </p>
       <div className="m-4">
-        <Button onClick={() => becomeInstructor()} shape="round" type="primary">
-          <p className="font-medium w-max">
-            Setup Stripe Payments For Your Account
-          </p>
+        <Button
+          // disabled={
+          //   loading || (user && user.role && user.role.includes('Instructor'))
+          // }
+          disabled={true}
+          onClick={() => becomeInstructor()}
+          shape="round"
+          type="primary"
+          icon={loading ? <LoadingOutlined /> : <CreditCardOutlined />}
+        >
+          Setup Stripe Payments For Your Account
         </Button>
       </div>
       <p className="text-md font-medium italic">

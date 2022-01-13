@@ -14,7 +14,7 @@ import { AppstoreAddOutlined, TeamOutlined } from '@ant-design/icons';
 
 const { Item } = Menu;
 
-const TopNav = () => {
+const TopNav = props => {
   const [current, setCurrent] = useState('');
   const { state, dispatch, success } = useContext(Context);
   const { user } = state;
@@ -39,10 +39,15 @@ const TopNav = () => {
   return (
     <Menu
       mode="horizontal"
-      className="items-center flex font-medium"
+      className="items-center z-10 sticky top-0 flex font-medium"
       selectedKeys={[current]}
     >
-      <Item className="no-underline" key="/" onClick={e => setCurrent(e.key)}>
+      <Item
+        {...props}
+        className="no-underline"
+        key="/"
+        onClick={e => setCurrent(e.key)}
+      >
         <Link href="/">
           <a>Home</a>
         </Link>
@@ -50,12 +55,12 @@ const TopNav = () => {
 
       {!user ? (
         <>
-          <Item key="/login" onClick={e => setCurrent(e.key)}>
+          <Item {...props} key="/login" onClick={e => setCurrent(e.key)}>
             <Link href="/login">
               <a>Login</a>
             </Link>
           </Item>
-          <Item key="/register" onClick={e => setCurrent(e.key)}>
+          <Item {...props} key="/register" onClick={e => setCurrent(e.key)}>
             <Link href="/register">
               <a>Register</a>
             </Link>
@@ -64,55 +69,45 @@ const TopNav = () => {
       ) : (
         <>
           <Item
+            {...props}
             className="no-underline "
             key="/user"
             onClick={e => setCurrent(e.key)}
           >
             <Link href="/user">
-              <a>Profile</a>
+              <a>My Account</a>
             </Link>
           </Item>
         </>
       )}
       <div className="absolute flex flex-row right-2">
         {user && user.role && user.role.includes('Instructor') ? (
-          <Item
-            className="overflow-hidden  hover:bg-white"
-            key="/instructor/course/create"
-            onClick={e => setCurrent(e.key)}
+          <Button
+            {...props}
+            onClick={() => router.push('/instructor/course/create')}
+            className="mr-8"
+            shape="round"
+            icon={<AppstoreAddOutlined />}
           >
-            <Button
-              onClick={() => router.push('/instructor/course/create')}
-              className="mr-8"
-              shape="round"
-              icon={<AppstoreAddOutlined />}
-            >
-              Create Course
-            </Button>
-          </Item>
+            Create Course
+          </Button>
         ) : (
-          <Item
-            className="overflow-hidden  hover:bg-white"
-            key="/user/become-instructor"
-            onClick={e => setCurrent(e.key)}
+          <Button
+            {...props}
+            color="blue"
+            onClick={() => router.push('/user/become-instructor')}
+            shape="round"
+            icon={<TeamOutlined />}
+            className="mr-8"
           >
-            <Button
-              color="blue"
-              onClick={() => router.push('/user/become-instructor')}
-              shape="round"
-              icon={<TeamOutlined />}
-            >
-              Become an Instructor
-            </Button>
-          </Item>
+            Become an Instructor
+          </Button>
         )}
 
         {user && (
-          <Item key="/logout" onClick={e => setCurrent(e.key)}>
-            <Button danger onClick={logout} type="round">
-              Logout
-            </Button>
-          </Item>
+          <Button danger onClick={logout} type="round">
+            Logout
+          </Button>
         )}
       </div>
     </Menu>

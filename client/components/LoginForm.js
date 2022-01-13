@@ -3,7 +3,7 @@ import { Input, Button, Form, Spin } from 'antd';
 import Link from 'next/link';
 
 //utils
-import { useRef, useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import axios from 'axios';
 import { Context } from '../context';
 import { useRouter } from 'next/router';
@@ -13,7 +13,6 @@ import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 
 const LoginForm = () => {
-  const formRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState(null);
 
@@ -50,12 +49,7 @@ const LoginForm = () => {
       <div className="bg-customError  text-white text-center mb-4">
         {loginError && loginError}
       </div>
-      <Form
-        name="normal_login"
-        ref={formRef}
-        className="login-form"
-        onFinish={handleSubmit}
-      >
+      <Form name="normal_login" className="login-form" onFinish={handleSubmit}>
         <Form.Item
           name="email"
           rules={[

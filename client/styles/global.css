@@ -4,6 +4,7 @@
 
 @layer base {
   svg {
+    display: inline;
     vertical-align: baseline;
   }
 }

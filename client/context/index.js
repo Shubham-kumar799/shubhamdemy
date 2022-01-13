@@ -1,5 +1,5 @@
 //components
-import { message } from 'antd';
+import { message, notification } from 'antd';
 
 //utils
 import { useReducer, createContext, useEffect } from 'react';
@@ -40,6 +40,14 @@ const Provider = ({ children }) => {
     message.error(msg);
   };
 
+  const showNotice = ({ type, description, message, duration }) => {
+    notification[type]({
+      message,
+      description,
+      duration,
+    });
+  };
+
   useEffect(() => {
     dispatch({
       type: 'LOGIN',
@@ -47,20 +55,22 @@ const Provider = ({ children }) => {
     });
   }, []);
 
-  useEffect(() => {
-    if (!user) {
-      axios
-        .get('/api/logout')
-        .then(data => {
-          dispatch({ type: 'LOGOUT' });
-          window.localStorage.removeItem('user');
-          router.push('/login');
-        })
-        .catch(err => {
-          console.log('force logout error', err);
-        });
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (!user) {
+  //     console.log('inside', user);
+  //     axios
+  //       .get('/api/logout')
+  //       .then(data => {
+  //         console.log('No user was found');
+  //         dispatch({ type: 'LOGOUT' });
+  //         window.localStorage.removeItem('user');
+  //         router.push('/login');
+  //       })
+  //       .catch(err => {
+  //         console.log('force logout error', err);
+  //       });
+  //   }
+  // }, [user]);
 
   // handling expired token
   axios.interceptors.response.use(
@@ -99,7 +109,7 @@ const Provider = ({ children }) => {
   }, []);
 
   return (
-    <Context.Provider value={{ state, dispatch, success, error }}>
+    <Context.Provider value={{ state, dispatch, success, error, showNotice }}>
       {children}
     </Context.Provider>
   );

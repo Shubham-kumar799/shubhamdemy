@@ -9,6 +9,7 @@ module.exports = {
     colors: {
       ...colors,
       customError: '#f5222d',
+      customPrimary: '#1890ff',
     },
   },
   variants: {

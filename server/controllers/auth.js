@@ -146,7 +146,7 @@ const forgotPassword = async (req, res) => {
         console.log('error sending email', err);
       });
   } catch (error) {
-    res.status(401).json({ message: 'Error. Try Again!' });
+    res.status(400).json({ message: 'Error. Try Again!' });
     console.log('error in forgot password', error);
   }
 };
@@ -163,7 +163,7 @@ const resetPassword = async (req, res) => {
     res.status(201).json({ ok: true });
   } catch (error) {
     console.log('error Reset password', error);
-    res.status(401).json({ message: 'Error. Try Again!' });
+    res.status(400).json({ message: 'Error. Try Again!' });
   }
 };
 
@@ -183,7 +183,7 @@ const verifyOtp = async (req, res) => {
     res.status(201).json({ ok: true });
   } catch (error) {
     console.log('error verifyOtp', error);
-    res.status(401).json({ message: 'Error. Try Again!' });
+    res.status(400).json({ message: 'Error. Try Again!' });
   }
 };
 
@@ -196,44 +196,3 @@ module.exports = {
   resetPassword,
   verifyOtp,
 };
-
-// const sendTestEmail = async (req, res) => {
-//   // console.log('sending email');
-//   // res.json({ ok: true });
-//   const params = {
-//     Source: process.env.EMAIL_FROM,
-//     Destination: {
-//       ToAddresses: ['shubhamkumar9868569372@gmail.com'],
-//     },
-//   ReplyToAddresses: [process.env.EMAIL_FROM],
-//   Message: {
-//     Body: {
-//       Html: {
-//         Charset: 'UTF-8',
-//         Data: `
-//           <html>
-//             <h1>Reset password link</h1>
-//             <p>Please use the following link to reset your password</p>
-//           </html>
-//         `,
-//       },
-//     },
-//     Subject: {
-//       Charset: 'UTF-8',
-//       Data: 'Password reset link',
-//     },
-//   },
-// };
-
-//   const emailSent = SES.sendEmail(params).promise();
-
-//   emailSent
-//     .then(data => {
-//       console.log('email sent');
-//       console.log('data', data);
-//       res.json({ ok: true });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// };
