@@ -21,6 +21,8 @@ const CheckUser = ({ children }) => {
       dispatch({
         type: 'LOGOUT',
       });
+      window.localStorage.removeItem('user');
+      router.push('/login');
     }
   };
 

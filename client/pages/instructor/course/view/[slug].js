@@ -5,13 +5,14 @@ import Image from 'next/image';
 import { Spin, Modal, Typography, Button, Tooltip, Divider } from 'antd';
 import AddLessonForm from '../../../../components/AddLessonForm';
 import Lessons from '../../../../components/Lessons';
+import ReactMarkdown from 'react-markdown';
 
 //utils
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { Context } from '../../../../context';
-import ReactMarkdown from 'react-markdown';
+import { handlePublishAndUnpublish } from '../../../../utils/course';
 
 //icons
 import {
@@ -19,9 +20,10 @@ import {
   EditOutlined,
   CloudUploadOutlined,
   CheckCircleOutlined,
+  CloseCircleOutlined,
 } from '@ant-design/icons';
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 const LessonUploadModal = ({
   setCourse,
@@ -56,8 +58,9 @@ const CourseView = () => {
   const [course, setCourse] = useState({});
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [descriptionEllipsis, setDescriptionEllipsis] = useState(true);
   const router = useRouter();
-  const { error } = useContext(Context);
+  const { error, success } = useContext(Context);
   const { slug } = router.query;
 
   useEffect(() => {
@@ -89,12 +92,13 @@ const CourseView = () => {
               <div className="p-8  items-center justify-center">
                 <Image src={course?.image?.Location} height={250} width={360} />
               </div>
-              <div className="pt-4">
+              <div className="pt-4 flex-1">
                 <Text className="font-bold text-3xl block">{course.title}</Text>
 
-                <Text className="text-lg block">
+                <div className="overflow-scroll scrollbar-hide h-48">
                   <ReactMarkdown>{course.description}</ReactMarkdown>
-                </Text>
+                </div>
+
                 <div className="flex flex-1 mt-4">
                   <Button
                     color="green"
@@ -118,18 +122,41 @@ const CourseView = () => {
                   <Tooltip
                     title={
                       course?.lessons?.length > 4
-                        ? 'Publish'
+                        ? course?.published
+                          ? 'Unpublish'
+                          : 'publish'
                         : 'Course should have atleast 5 lessons before publish'
                     }
-                    color={course?.lessons?.length > 4 ? 'green' : '#f5222d'}
+                    color={
+                      course?.lessons?.length > 4
+                        ? course?.published
+                          ? '#f5222d'
+                          : 'green'
+                        : '#f5222d'
+                    }
                   >
                     <Button
-                      icon={<CheckCircleOutlined />}
-                      disabled={course?.lessons?.length < 4}
+                      icon={
+                        course?.published ? (
+                          <CloseCircleOutlined />
+                        ) : (
+                          <CheckCircleOutlined />
+                        )
+                      }
+                      disabled={course?.lessons?.length <= 4}
                       className="mr-4"
                       shape="round"
+                      danger={course.published}
+                      onClick={() =>
+                        handlePublishAndUnpublish({
+                          course,
+                          setCourse,
+                          success,
+                          error,
+                        })
+                      }
                     >
-                      Publish
+                      {course?.published ? 'Take Down' : 'Publish'}
                     </Button>
                   </Tooltip>
                 </div>

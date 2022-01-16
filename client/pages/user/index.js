@@ -10,7 +10,7 @@ const UserIndex = () => {
     state: { user },
   } = useContext(Context);
 
-  return <SideNav></SideNav>;
+  return <SideNav>yo</SideNav>;
 };
 
 export default UserIndex;

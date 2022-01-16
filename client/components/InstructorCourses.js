@@ -1,6 +1,6 @@
 //components
 import { Spin } from 'antd';
-import InstructorSingleCourse from './InstructorSingleCourse';
+import InstructorSingleCourseCard from './InstructorSingleCourseCard';
 import SideNav from './SideNav';
 
 //utils
@@ -39,7 +39,7 @@ const InstructorCourses = () => {
         <div className="flex flex-row">
           {courses &&
             courses.map(course => (
-              <InstructorSingleCourse course={course} key={course.title} />
+              <InstructorSingleCourseCard course={course} key={course.title} />
             ))}
         </div>
       )}

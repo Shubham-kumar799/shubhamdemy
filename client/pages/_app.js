@@ -1,5 +1,4 @@
 import 'antd/dist/antd.css';
-import 'react-toastify/dist/ReactToastify.css';
 import '../styles/global.css';
 
 //components

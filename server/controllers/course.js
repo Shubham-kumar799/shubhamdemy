@@ -3,6 +3,8 @@ const { nanoid } = require('nanoid');
 const Course = require('../models/course');
 const slugify = require('slugify');
 const { readFileSync } = require('fs');
+const User = require('../models/user');
+const Completed = require('../models/completed');
 
 const awsConfig = {
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -184,12 +186,20 @@ const addLesson = async (req, res) => {
     }
 
     const { slug, instructorId } = req.params;
-    const { title, content, video } = req.body;
+    const { title, content, video, free_preview } = req.body;
 
     const updated = await Course.findOneAndUpdate(
       { slug },
       {
-        $push: { lessons: { title, content, video, slug: slugify(title) } },
+        $push: {
+          lessons: {
+            title,
+            content,
+            video,
+            slug: slugify(title),
+            free_preview,
+          },
+        },
       },
       {
         new: true,
@@ -276,6 +286,194 @@ const updateLesson = async (req, res) => {
   }
 };
 
+const publishCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const course = await Course.findById(courseId).select('instructor').exec();
+    if (course.instructor._id != req.user._id) {
+      res.status(401).json({ msg: 'Unauthorized' });
+    }
+
+    const updated = await Course.findByIdAndUpdate(
+      courseId,
+      { published: true },
+      { new: true }
+    );
+    res.status(200).json(updated);
+  } catch (err) {
+    console.log('error publish course', err);
+    res.status(400).json({ msg: 'Error publishing course. Try Again' });
+  }
+};
+
+const takeDownCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const course = await Course.findById(courseId).select('instructor').exec();
+
+    if (course.instructor._id != req.user._id) {
+      res.status(401).json({ msg: 'Unauthorized' });
+    }
+
+    const updated = await Course.findByIdAndUpdate(
+      courseId,
+      { published: false },
+      { new: true }
+    );
+    res.status(200).json(updated);
+  } catch (err) {
+    console.log('error publish course', err);
+    res.status(400).json({ msg: 'Error unpublishing your course. Try Again' });
+  }
+};
+
+const courses = async (req, res) => {
+  try {
+    const all = await Course.find({ published: true })
+      .select('-lessons')
+      .populate('instructor', '_id username')
+      .exec();
+
+    res.status(200).json(all);
+  } catch (err) {
+    console.log('error in courses', err);
+    res.status(400).json({ msg: 'Error fetching courses. Try Again' });
+  }
+};
+
+const checkEnrollment = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const user = await User.findById(req.user._id);
+
+    let ids = [];
+    let length = user.courses && user.courses.length;
+    for (let i = 0; i < length; i++) {
+      ids.push(user.courses[i].toString());
+    }
+
+    res.json({
+      status: ids.includes(courseId),
+      course: await Course.findById(courseId),
+    });
+  } catch (err) {
+    console.log('Error checking enrollment', err);
+    res.status(500).json({ message: 'Error! Try Again.' });
+  }
+};
+
+const freeEnrollment = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const course = await Course.findById(courseId);
+    if (course.paid) return;
+
+    const result = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $addToSet: { courses: course._id },
+      },
+      {
+        new: true,
+      }
+    );
+    res.json(result);
+  } catch (err) {
+    console.log('Error in free enrollment', err);
+    res.status(500).json({ msg: 'Error. Try Again.' });
+  }
+};
+
+const userCourses = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const courses = await Course.find({ _id: { $in: user.courses } })
+      .populate('instructor', '_id username')
+      .exec();
+    res.json(courses);
+  } catch (err) {
+    console.log('error in usercourses', err);
+    res.json(500);
+  }
+};
+
+const markCompleted = async (req, res) => {
+  try {
+    const { courseId, lessonId } = req.body;
+    const existing = await Completed.findOne({
+      user: req.user._id,
+      course: courseId,
+    }).exec();
+
+    if (existing) {
+      //updating the document
+      console.log('updated');
+      const updated = await Completed.findOneAndUpdate(
+        {
+          user: req.user._id,
+          course: courseId,
+        },
+        {
+          $addToSet: { lessons: lessonId },
+        },
+        {
+          new: true,
+        }
+      );
+
+      res.json(updated);
+    } else {
+      //create new
+      console.log('createed new');
+      const created = await new Completed({
+        user: req.user._id,
+        course: courseId,
+        lessons: lessonId,
+      }).save();
+      res.json(created);
+    }
+  } catch (error) {
+    console.log('error in markcompleted', err);
+    res.status(500).json({ msg: 'Error. Try Again.' });
+  }
+};
+
+const listCompleted = async (req, res) => {
+  try {
+    const list = await Completed.findOne({
+      user: req.user._id,
+      course: req.body.courseId,
+    }).exec();
+
+    res.json(list);
+  } catch (err) {
+    console.log('error in list-completed', err);
+    res.json(500);
+  }
+};
+
+const markIncomplete = async (req, res) => {
+  try {
+    const { courseId, lessonId } = req.body;
+    const updated = await Completed.findOneAndUpdate(
+      {
+        user: req.user._id,
+        course: courseId,
+      },
+      {
+        $pull: { lessons: lessonId },
+      },
+      {
+        new: true,
+      }
+    );
+    res.json(updated);
+  } catch (err) {
+    console.log('error in mark incompletet', err);
+    res.json(500);
+  }
+};
+
 module.exports = {
   uploadImage,
   removeImage,
@@ -287,4 +485,13 @@ module.exports = {
   update,
   removeLesson,
   updateLesson,
+  publishCourse,
+  takeDownCourse,
+  courses,
+  checkEnrollment,
+  freeEnrollment,
+  userCourses,
+  markCompleted,
+  listCompleted,
+  markIncomplete,
 };

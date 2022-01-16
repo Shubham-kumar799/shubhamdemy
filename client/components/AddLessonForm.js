@@ -1,5 +1,5 @@
 //components
-import { Form, Input, Divider, Upload, Button, Progress } from 'antd';
+import { Form, Switch, Input, Divider, Upload, Button, Progress } from 'antd';
 
 //utils
 import { useState, useContext, useRef } from 'react';
@@ -96,6 +96,7 @@ const AddLessonForm = ({ setVisible, setCourse, slug, course }) => {
         {
           title: values.title,
           content: values.content,
+          free_preview: values.preview,
           video,
         }
       );
@@ -188,7 +189,9 @@ const AddLessonForm = ({ setVisible, setCourse, slug, course }) => {
         </Upload>
       </Form.Item>
       {progress != 0 && <Progress percent={progress} />}
-
+      <Form.Item valuePropName="checked" name="preview" label="Free Preview">
+        <Switch />
+      </Form.Item>
       <Divider />
       <div className=" flex flex-row-reverse">
         <Form.Item>

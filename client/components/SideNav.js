@@ -48,18 +48,18 @@ const SideNav = ({ children }) => {
           mode="inline"
         >
           <Menu.Item
-            key="1"
+            key="/user"
             onClick={e => setCurrent(e.key)}
             icon={<UserOutlined />}
           >
-            Profile
+            <Link href="/user">Profile</Link>
           </Menu.Item>
           <Menu.Item
-            key="2"
+            key="/user/course"
             onClick={e => setCurrent(e.key)}
             icon={<DesktopOutlined />}
           >
-            My Courses
+            <Link href="/user/course">My Courses</Link>
           </Menu.Item>
           {user && user.role && user.role.includes('Instructor') && (
             <Menu.Item

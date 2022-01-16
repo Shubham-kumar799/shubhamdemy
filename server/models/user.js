@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+const { ObjectId } = mongoose.Schema;
+
 const userSchema = new Schema(
   {
     username: {
@@ -32,6 +34,12 @@ const userSchema = new Schema(
     stripe_account_id: '',
     stripe_seller: {},
     stripeSession: {},
+    courses: [
+      {
+        type: ObjectId,
+        ref: 'Course',
+      },
+    ],
     passwordResetCode: {
       data: String,
       default: '',
