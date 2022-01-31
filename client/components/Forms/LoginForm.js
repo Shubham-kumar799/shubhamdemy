@@ -1,46 +1,46 @@
 //components
-import { Input, Button, Form, Spin } from 'antd';
+import { Input, Button, Form } from 'antd';
 import Link from 'next/link';
 
 //utils
-import { useState, useContext } from 'react';
-import axios from 'axios';
-import { Context } from '../context';
-import { useRouter } from 'next/router';
+import { useState, useContext, useEffect } from 'react';
+import { Context } from '../../context';
+import { useApi } from '../../hooks';
 
 //icons
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 
 const LoginForm = () => {
-  const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState(null);
-
   const { dispatch, success } = useContext(Context);
-  const router = useRouter();
+  const [res, API] = useApi({
+    url: `/api/login`,
+    method: 'post',
+  });
 
-  const handleSubmit = async values => {
-    setLoading(true);
-    setLoginError(null);
-    try {
-      const { data } = await axios.post(`/api/login`, {
+  const handleSubmit = values => {
+    API({
+      body: {
         email: values.email,
         password: values.password,
-      });
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (res.error) {
+      setLoginError(res.error?.response?.data?.message);
+    }
+    if (res.data?.ok) {
       dispatch({
         type: 'LOGIN',
-        payload: data,
+        payload: res.data.user,
       });
-      // save in local storage
-      window.localStorage.setItem('user', JSON.stringify(data));
-      router.push('/user');
+      window.localStorage.setItem('user', JSON.stringify(res.data.user));
       success({ msg: 'Login Successful' });
-    } catch (err) {
-      setLoginError(err.response.data);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [res.data, res.error]);
 
   return (
     <div className="flex flex-col w-2/3 sm:w-2/5 md:w-1/3">
@@ -89,8 +89,13 @@ const LoginForm = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button htmlType="submit" className="w-full">
-            {loading ? <Spin size="small" /> : 'Login'}
+          <Button
+            loading={res.loading}
+            disabled={res.loading}
+            htmlType="submit"
+            className="w-full"
+          >
+            Login
           </Button>
         </Form.Item>
         <Form.Item>

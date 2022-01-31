@@ -19,7 +19,10 @@ const register = async (req, res) => {
 
     //searching for user
     let userExist = await User.findOne({ email }).exec();
-    if (userExist) return res.status(400).send('Email is already in use');
+    if (userExist)
+      return res
+        .status(400)
+        .json({ message: 'Email is already in use', ok: false });
 
     // hash password
     const hashedPassword = await hashPassword(password);
@@ -43,22 +46,26 @@ const register = async (req, res) => {
       expires: new Date(Date.now() + 7 * 24 * 3600000), //7 days
     });
 
-    res.status(201).json(user);
+    res.status(201).json({ ok: true, user });
   } catch (err) {
     console.log('error registering user', err);
-    return res.status(400).send('Error. Try Again');
+    return res.status(400).json({ ok: false, message: 'Error. Try Again' });
   }
 };
 
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(email, password);
+
     const user = await User.findOne({ email }).exec();
-    if (!user) return res.status(400).send('No user found');
+    if (!user)
+      return res.status(400).json({ ok: false, message: 'No user found' });
 
     const match = await comparePassword(password, user.password);
-    if (!match) return res.status(400).send('Invalid credentials');
+    if (!match)
+      return res
+        .status(400)
+        .json({ ok: false, message: 'Invalid credentials' });
 
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: '7d',
@@ -71,20 +78,20 @@ const login = async (req, res) => {
       expires: new Date(Date.now() + 7 * 24 * 3600000), //7 days
     });
 
-    res.status(200).json(user);
+    res.status(200).json({ ok: true, user });
   } catch (err) {
     console.log('Error logging in', err);
-    res.status(400).send('Error. Try Again');
+    res.status(400).json({ ok: false, message: 'Error. Try Again' });
   }
 };
 
 const logout = async (req, res) => {
   try {
     res.clearCookie('token');
-    return res.status(200).json({ message: 'Logout Successful' });
+    return res.status(200).json({ ok: true, message: 'Logout Successful' });
   } catch (err) {
     console.log('logout err', err);
-    return res.status(400).json({ message: 'Error, Try again' });
+    return res.status(400).json({ ok: false, message: 'Error, Try again' });
   }
 };
 
@@ -139,7 +146,6 @@ const forgotPassword = async (req, res) => {
     const emailSent = SES.sendEmail(params).promise();
     emailSent
       .then(data => {
-        console.log('emailSentData', data);
         res.json({ ok: true });
       })
       .catch(err => {

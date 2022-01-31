@@ -4,9 +4,9 @@ import { Button, Divider, Tooltip } from 'antd';
 import ReactMarkdown from 'react-markdown';
 
 //utils
-import axios from 'axios';
 import { Context } from '../context';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import { useApi } from '../hooks';
 
 //icons
 import AddTaskIcon from '@mui/icons-material/AddTask';
@@ -14,34 +14,34 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 const StudentLesson = ({ setCompleted, lesson, courseId, lessonCompleted }) => {
   const { success, error } = useContext(Context);
+  const [completeRes, completeAPI] = useApi({
+    url: `/api/mark-completed`,
+    method: 'post',
+  });
+  const [incompleteRes, incompleteAPI] = useApi({
+    url: `/api/mark-incomplete`,
+    method: 'post',
+  });
 
-  const markCompleted = async () => {
-    try {
-      const { data } = await axios.post(`/api/mark-completed`, {
-        courseId,
-        lessonId: lesson._id,
-      });
-      setCompleted(data);
-      success({ msg: 'Lesson marked as completed' });
-    } catch (err) {
-      console.log('error marking completed', err);
-      error({ msg: 'Error marking Completed. Try Again' });
-    }
-  };
-
-  const markIncomplete = async () => {
-    try {
-      const { data } = await axios.post(`/api/mark-incomplete`, {
-        courseId,
-        lessonId: lesson._id,
-      });
-      setCompleted(data);
+  useEffect(() => {
+    if (incompleteRes.data?.ok) {
+      setCompleted(incompleteRes.data.message);
       success({ msg: 'Lesson removed from completed' });
-    } catch (err) {
-      console.log('error marking completed', err);
+    }
+    if (incompleteRes.error) {
       error({ msg: 'Error. Try Again' });
     }
-  };
+  }, [incompleteRes.data, incompleteRes.error]);
+
+  useEffect(() => {
+    if (completeRes.data?.ok) {
+      setCompleted(completeRes.data.message);
+      success({ msg: 'Lesson marked as completed' });
+    }
+    if (completeRes.error) {
+      error({ msg: 'Error marking Completed. Try Again' });
+    }
+  }, [completeRes.data, completeRes.error]);
 
   return (
     <div>
@@ -51,7 +51,14 @@ const StudentLesson = ({ setCompleted, lesson, courseId, lessonCompleted }) => {
           controls
           width="80%"
           height="50%"
-          onEnded={() => markCompleted()}
+          onEnded={() =>
+            completeAPI({
+              body: {
+                courseId,
+                lessonId: lesson._id,
+              },
+            })
+          }
         />
       </div>
       <div className="m-2 p-2">
@@ -59,13 +66,34 @@ const StudentLesson = ({ setCompleted, lesson, courseId, lessonCompleted }) => {
           <p className="text-2xl font-medium">{lesson.title}</p>
           {lessonCompleted ? (
             <Tooltip title="Remove from completed" color="red">
-              <Button danger type="text" onClick={() => markIncomplete()}>
+              <Button
+                danger
+                type="text"
+                onClick={() =>
+                  incompleteAPI({
+                    body: {
+                      courseId,
+                      lessonId: lesson._id,
+                    },
+                  })
+                }
+              >
                 <CancelIcon />
               </Button>
             </Tooltip>
           ) : (
             <Tooltip title="Mark as Completed">
-              <Button type="primary" onClick={() => markCompleted()}>
+              <Button
+                type="primary"
+                onClick={() =>
+                  completeAPI({
+                    body: {
+                      courseId,
+                      lessonId: lesson._id,
+                    },
+                  })
+                }
+              >
                 <AddTaskIcon className="cursor-pointer" />
               </Button>
             </Tooltip>

@@ -1,14 +1,14 @@
 //components
 import { List, Avatar, Button, Modal, Typography } from 'antd';
-import UpdateLessonForm from './UpdateLessonForm';
+import { UpdateLessonForm } from './Forms';
 
 //utils
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Context } from '../context';
+import { useApi } from '../hooks';
 
 //icons
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import axios from 'axios';
 
 const { Paragraph } = Typography;
 
@@ -45,26 +45,24 @@ const LessonUpdateModal = ({
 };
 
 const ListLessonItem = ({ course, slug, setCourse, item, index }) => {
-  const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
   const { error, success } = useContext(Context);
+  const [res, API] = useApi({
+    url: `/api/course/${slug}/${item._id}`,
+    method: 'put',
+  });
 
-  const handleDelete = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.put(`/api/course/${slug}/${item._id}`);
-
+  useEffect(() => {
+    if (res.data?.ok) {
       success({ msg: 'Lesson deleted successfully' });
-      setCourse(data);
+      setCourse(res.data?.message);
       setDeleteVisible(false);
-    } catch (err) {
-      console.log('error deleting lesson', err);
-      error({ msg: err.response.data.message });
-    } finally {
-      setLoading(false);
     }
-  };
+    if (res.error) {
+      error({ msg: err.response.data.message });
+    }
+  }, [res.error, res.data]);
 
   return (
     <>
@@ -83,17 +81,17 @@ const ListLessonItem = ({ course, slug, setCourse, item, index }) => {
         centered
         footer={[
           <Button
-            disabled={loading}
-            loading={loading}
+            disabled={res.loading}
+            loading={res.loading}
             onClick={() => setDeleteVisible(false)}
           >
             Cancel
           </Button>,
           <Button
-            disabled={loading}
-            loading={loading}
+            disabled={res.loading}
+            loading={res.loading}
             type="primary"
-            onClick={() => handleDelete()}
+            onClick={() => API({})}
             icon={<DeleteOutlined />}
             danger
           >

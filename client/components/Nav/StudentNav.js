@@ -1,14 +1,13 @@
 //components
 import { Avatar, Layout, Menu } from 'antd';
-import StudentLesson from './StudentLesson';
+import StudentLesson from '../StudentLesson';
 
 //utils
 import { useState, useContext, useEffect } from 'react';
-import { Context } from '../context';
+import { Context } from '../../context';
 import axios from 'axios';
 
 //icons
-import AddTaskIcon from '@mui/icons-material/AddTask';
 
 const { Content, Sider } = Layout;
 

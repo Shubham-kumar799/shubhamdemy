@@ -1,38 +1,43 @@
 //components
-import { Spin, Input, Form, Button } from 'antd';
+import { Input, Form, Button } from 'antd';
 
 //utils
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Context } from '../../context';
 import { useRouter } from 'next/router';
-import axios from 'axios';
+import { useApi } from '../../hooks';
 
 //icons
 import LockIcon from '@mui/icons-material/Lock';
 
 const ResetPasswordForm = ({ email, prev }) => {
   const [resetPasswordError, setResetPasswordError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const { success } = useContext(Context);
   const router = useRouter();
+  const [res, API] = useApi({
+    url: '/api/reset-password',
+    method: 'post',
+  });
 
-  const handleSubmit = async values => {
-    try {
-      console.log('NewPassword,', values.newPassword);
-      setLoading(true);
-      const { data } = await axios.post('/api/reset-password', {
+  const handleSubmit = values => {
+    API({
+      body: {
         newPassword: values.newPassword,
         email,
-      });
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (res.error) {
+      setResetPasswordError(res.error?.response?.data?.message);
+    }
+    if (res.data) {
       success({ msg: 'Password Reset Successful.' });
       router.push('/login');
       success({ msg: 'Login with you new password.' });
-    } catch (err) {
-      setResetPasswordError(err.response.data.message);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [res.error, res.data]);
 
   return (
     <>
@@ -55,8 +60,13 @@ const ResetPasswordForm = ({ email, prev }) => {
           />
         </Form.Item>
         <Form.Item>
-          <Button disabled={loading} htmlType="submit" className="w-full">
-            {loading ? <Spin size="small" /> : 'Reset Password'}
+          <Button
+            disabled={res.loading}
+            loading={res.loading}
+            htmlType="submit"
+            className="w-full"
+          >
+            Reset Password
           </Button>
         </Form.Item>
       </Form>

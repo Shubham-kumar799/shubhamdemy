@@ -4,7 +4,7 @@ import { Form, Switch, Input, Divider, Upload, Button, Progress } from 'antd';
 //utils
 import { useState, useContext, useRef } from 'react';
 import axios from 'axios';
-import { Context } from '../context';
+import { Context } from '../../context';
 
 //icons
 import {
@@ -30,7 +30,6 @@ const AddLessonForm = ({ setVisible, setCourse, slug, course }) => {
 
   const uploadVideo = async file => {
     try {
-      console.log('In upload video');
       setUploading(true);
       const videoData = new FormData();
       videoData.append('video', file);
@@ -45,7 +44,6 @@ const AddLessonForm = ({ setVisible, setCourse, slug, course }) => {
           },
         }
       );
-      console.log('video', data);
       setVideo(data);
       success({ msg: 'Video uploaded successfully' });
     } catch (err) {

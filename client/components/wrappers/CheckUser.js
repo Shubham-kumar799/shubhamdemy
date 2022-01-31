@@ -1,46 +1,34 @@
 //components
-import { Spin } from 'antd';
+import Loader from '../ui/Loader';
 
 //utils
-import { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
+import { useEffect, useContext } from 'react';
 import { Context } from '../../context';
+import { useRouter } from 'next/router';
+import { useApi } from '../../hooks';
 
 const CheckUser = ({ children }) => {
-  const [ok, setOk] = useState(false);
-
   const { dispatch } = useContext(Context);
-
-  const fetchUser = async () => {
-    try {
-      const { data } = await axios.get('/api/current-user');
-      if (data.ok) setOk(true);
-    } catch (error) {
-      console.log('Error fetching user', error);
-      setOk(false);
-      dispatch({
-        type: 'LOGOUT',
-      });
-      window.localStorage.removeItem('user');
-      router.push('/login');
-    }
-  };
+  const router = useRouter();
+  const [res, checkUserAPI] = useApi({
+    headers: null,
+    method: 'get',
+    url: '/api/current-user',
+  });
 
   useEffect(() => {
-    fetchUser();
+    checkUserAPI({});
   }, []);
 
-  return (
-    <>
-      {ok ? (
-        <>{children}</>
-      ) : (
-        <div className="flex items-center justify-center h-screen">
-          <Spin className="text-3xl" />
-        </div>
-      )}
-    </>
-  );
+  if (res.error) {
+    dispatch({
+      type: 'LOGOUT',
+    });
+    window.localStorage.removeItem('user');
+    router.push('/login');
+  }
+
+  return <>{res?.data?.ok ? <>{children}</> : <Loader />}</>;
 };
 
 export default CheckUser;

@@ -1,5 +1,5 @@
 //components
-import SideNav from '../../components/SideNav';
+import { SideNav } from '../../components/Nav';
 
 //utils
 import { useContext } from 'react';

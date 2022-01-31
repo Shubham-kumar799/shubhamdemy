@@ -1,7 +1,7 @@
 //components
 import Image from 'next/image';
 import Link from 'next/link';
-import RegisterForm from '../components/RegisterForm';
+import { RegisterForm } from '../components/Forms';
 
 //utils
 import logoblue from '../public/images/logo_blue.png';

@@ -1,20 +1,19 @@
 //components
 import Link from 'next/link';
 import { Menu, Button } from 'antd';
-import AppButton from './ui/AppButton';
 
 //utils
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { Context } from '../context';
+import { Context } from '../../context';
 
 //icons
 import { AppstoreAddOutlined, TeamOutlined } from '@ant-design/icons';
 
 const { Item } = Menu;
 
-const TopNav = props => {
+const TopNav = () => {
   const [current, setCurrent] = useState('');
   const { state, dispatch, success } = useContext(Context);
   const { user } = state;
@@ -42,12 +41,7 @@ const TopNav = props => {
       className="items-center z-10 sticky top-0 flex font-medium"
       selectedKeys={[current]}
     >
-      <Item
-        {...props}
-        className="no-underline"
-        key="/"
-        onClick={e => setCurrent(e.key)}
-      >
+      <Item className="no-underline" key="/" onClick={e => setCurrent(e.key)}>
         <Link href="/">
           <a>Home</a>
         </Link>
@@ -55,12 +49,12 @@ const TopNav = props => {
 
       {!user ? (
         <>
-          <Item {...props} key="/login" onClick={e => setCurrent(e.key)}>
+          <Item key="/login" onClick={e => setCurrent(e.key)}>
             <Link href="/login">
               <a>Login</a>
             </Link>
           </Item>
-          <Item {...props} key="/register" onClick={e => setCurrent(e.key)}>
+          <Item key="/register" onClick={e => setCurrent(e.key)}>
             <Link href="/register">
               <a>Register</a>
             </Link>
@@ -69,7 +63,6 @@ const TopNav = props => {
       ) : (
         <>
           <Item
-            {...props}
             className="no-underline "
             key="/user"
             onClick={e => setCurrent(e.key)}
@@ -83,7 +76,6 @@ const TopNav = props => {
       <div className="absolute flex flex-row right-2">
         {user && user.role && user.role.includes('Instructor') ? (
           <Button
-            {...props}
             onClick={() => router.push('/instructor/course/create')}
             className="mr-8"
             shape="round"
@@ -93,7 +85,6 @@ const TopNav = props => {
           </Button>
         ) : (
           <Button
-            {...props}
             color="blue"
             onClick={() => router.push('/user/become-instructor')}
             shape="round"

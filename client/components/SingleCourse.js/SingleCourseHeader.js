@@ -6,9 +6,9 @@ import { Button } from 'antd';
 import { currencyFormatter } from '../../utils/helpers';
 import { useContext, useEffect, useState } from 'react';
 import { Context } from '../../context';
-import axios from 'axios';
 import { handleFreeAndPaidEnrollment } from '../../utils/course';
 import { useRouter } from 'next/router';
+import { useApi } from '../../hooks';
 
 //icons
 import { CheckCircleOutlined } from '@ant-design/icons';
@@ -28,23 +28,18 @@ const SingleCourseHeader = ({
     error,
   } = useContext(Context);
   const [enrolled, setEnrolled] = useState(false);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
-
-  const checkEnrollment = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.get(`/api/check-enrollment/${_id}`);
-      setEnrolled(data.status);
-    } catch (err) {
-      console.log('error checking enrollment', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [res, API] = useApi({
+    method: 'get',
+    url: `/api/check-enrollment/${_id}`,
+  });
 
   useEffect(() => {
-    if (user && _id) checkEnrollment();
+    setEnrolled(res.data?.ok);
+  }, [res.error, res.data]);
+
+  useEffect(() => {
+    if (user && _id) API({});
   }, [user, _id]);
 
   return (
@@ -96,8 +91,8 @@ const SingleCourseHeader = ({
               shape="round"
               type="primary"
               size="large"
-              loading={loading}
-              disabled={loading}
+              loading={res.loading}
+              disabled={res.loading}
             >
               {user ? 'Enroll Now' : 'Login To Enroll'}
             </Button>

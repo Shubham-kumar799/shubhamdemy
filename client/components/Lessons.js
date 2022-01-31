@@ -11,7 +11,7 @@ const Lessons = ({ setCourse, slug, course }) => {
         dataSource={course.lessons}
         renderItem={(item, index) => (
           <ListLessonItem
-            key={index}
+            key={item._id}
             setCourse={setCourse}
             slug={slug}
             index={index}

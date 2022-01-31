@@ -1,11 +1,11 @@
 //components
-import SideNav from '../../../components/SideNav';
-import { Spin } from 'antd';
+import { SideNav } from '../../../components/Nav';
+import Loader from '../../../components/ui/Loader';
 import UserSingleCourseCard from '../../../components/UserSingleCourseCard';
 
 //utils
-import { Context } from '../../../context';
-import { useContext, useEffect, useState } from 'react';
+
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const UserCourses = () => {
@@ -16,7 +16,6 @@ const UserCourses = () => {
       try {
         const { data } = await axios.get('/api/user-courses');
         setCourses(data);
-        console.log('jlkfd;jsak', data);
       } catch (err) {
         console.log('error loading courses', err);
       }
@@ -28,9 +27,7 @@ const UserCourses = () => {
     <SideNav>
       <div>
         {!courses ? (
-          <div className="flex flex-1 h-screen items-center justify-center">
-            <Spin />
-          </div>
+          <Loader />
         ) : (
           courses?.map((course, index) => (
             <UserSingleCourseCard course={course} key={index} />

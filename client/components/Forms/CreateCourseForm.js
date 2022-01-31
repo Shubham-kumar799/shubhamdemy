@@ -5,7 +5,7 @@ import { Form, Input, Tag, Select, Switch, Upload, Button } from 'antd';
 import { useState, useContext, useRef } from 'react';
 import Resizer from 'react-image-file-resizer';
 import axios from 'axios';
-import { Context } from '../context';
+import { Context } from '../../context';
 import router from 'next/router';
 
 //icons

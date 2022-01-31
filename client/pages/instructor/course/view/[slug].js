@@ -1,11 +1,12 @@
 //components
 import CheckInstructor from '../../../../components/wrappers/CheckInstructor';
-import SideNav from '../../../../components/SideNav';
+import { SideNav } from '../../../../components/Nav';
 import Image from 'next/image';
-import { Spin, Modal, Typography, Button, Tooltip, Divider } from 'antd';
-import AddLessonForm from '../../../../components/AddLessonForm';
+import { Modal, Typography, Button, Tooltip, Divider } from 'antd';
+import { AddLessonForm } from '../../../../components/Forms';
 import Lessons from '../../../../components/Lessons';
 import ReactMarkdown from 'react-markdown';
+import Loader from '../../../../components/ui/Loader';
 
 //utils
 import { useState, useEffect, useContext } from 'react';
@@ -23,7 +24,7 @@ import {
   CloseCircleOutlined,
 } from '@ant-design/icons';
 
-const { Text, Paragraph } = Typography;
+const { Text } = Typography;
 
 const LessonUploadModal = ({
   setCourse,
@@ -83,9 +84,7 @@ const CourseView = () => {
     <CheckInstructor>
       <SideNav>
         {loading || !course ? (
-          <div className="flex items-center justify-center h-screen">
-            <Spin />
-          </div>
+          <Loader />
         ) : (
           <>
             <div className="flex flex-row-reverse justify-between">

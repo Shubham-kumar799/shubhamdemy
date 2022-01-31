@@ -69,13 +69,13 @@ const currentInstructor = async (req, res) => {
   try {
     let user = await User.findById(req.user._id).select('-password');
     if (!user.role.includes('Instructor')) {
-      return res.status(403).json({ msg: 'Unauthorized' });
+      return res.status(403).json({ ok: false, message: 'Unauthorized' });
     }
 
     return res.status(200).json({ ok: true });
   } catch (err) {
     console.log('error in current Instructor', err);
-    res.status(500).json({ msg: 'Error. Try Again' });
+    res.status(500).json({ ok: false, message: 'Error. Try Again' });
   }
 };
 
@@ -84,10 +84,10 @@ const instructorCourses = async (req, res) => {
     const courses = await Course.find({ instructor: req.user._id }).sort({
       createdAt: -1,
     });
-    res.status(200).json(courses);
+    res.status(200).json({ ok: true, message: courses });
   } catch (err) {
     console.log('Error in instructor courses', err);
-    res.status(500).json({ message: 'Error. Try Again.' });
+    res.status(500).json({ ok: false, message: 'Error. Try Again.' });
   }
 };
 

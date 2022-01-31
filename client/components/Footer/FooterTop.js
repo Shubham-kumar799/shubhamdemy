@@ -1,5 +1,5 @@
 //components
-import AppButton from './ui/AppButton';
+import AppButton from '../ui/AppButton';
 
 const FooterTop = () => {
   return (

@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 //utils
 import { useState, useEffect, useContext } from 'react';
-import { Context } from '../context';
+import { Context } from '../../context';
 
 //icons
 import { DesktopOutlined, UserOutlined } from '@ant-design/icons';

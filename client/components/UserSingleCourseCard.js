@@ -1,9 +1,8 @@
 //components
-import { Card, Button, Typography } from 'antd';
+import { Card, Typography } from 'antd';
 import Image from 'next/image';
 
 //icons
-import { HourglassOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 
 const { Text } = Typography;

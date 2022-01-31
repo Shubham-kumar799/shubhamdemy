@@ -237,7 +237,7 @@ const removeLesson = async (req, res) => {
     const { slug, lessonId } = req.params;
     const course = await Course.findOne({ slug });
     if (course.instructor != req.user._id) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ ok: false, message: 'Unauthorized' });
     }
 
     const updated = await Course.findByIdAndUpdate(
@@ -247,10 +247,10 @@ const removeLesson = async (req, res) => {
       },
       { new: true }
     );
-    res.json(updated);
+    res.json({ ok: true, message: updated });
   } catch (err) {
     console.log('Error deleting lesson', err);
-    res.status(400).json({ message: 'Error. Try Again!' });
+    res.status(400).json({ ok: false, message: 'Error. Try Again!' });
   }
 };
 
@@ -353,12 +353,11 @@ const checkEnrollment = async (req, res) => {
     }
 
     res.json({
-      status: ids.includes(courseId),
-      course: await Course.findById(courseId),
+      ok: ids.includes(courseId),
     });
   } catch (err) {
     console.log('Error checking enrollment', err);
-    res.status(500).json({ message: 'Error! Try Again.' });
+    res.status(500).json({ ok: false, message: 'Error! Try Again.' });
   }
 };
 
@@ -407,7 +406,6 @@ const markCompleted = async (req, res) => {
 
     if (existing) {
       //updating the document
-      console.log('updated');
       const updated = await Completed.findOneAndUpdate(
         {
           user: req.user._id,
@@ -421,20 +419,19 @@ const markCompleted = async (req, res) => {
         }
       );
 
-      res.json(updated);
+      res.json({ ok: true, message: updated });
     } else {
       //create new
-      console.log('createed new');
       const created = await new Completed({
         user: req.user._id,
         course: courseId,
         lessons: lessonId,
       }).save();
-      res.json(created);
+      res.json({ ok: true, message: created });
     }
   } catch (error) {
     console.log('error in markcompleted', err);
-    res.status(500).json({ msg: 'Error. Try Again.' });
+    res.status(500).json({ ok: false, msg: 'Error. Try Again.' });
   }
 };
 
@@ -467,10 +464,10 @@ const markIncomplete = async (req, res) => {
         new: true,
       }
     );
-    res.json(updated);
+    res.json({ ok: true, message: updated });
   } catch (err) {
     console.log('error in mark incompletet', err);
-    res.json(500);
+    res.status(500).json({ ok: false, msg: 'Error. Try Again.' });
   }
 };
 

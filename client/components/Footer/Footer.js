@@ -1,12 +1,12 @@
 //components
 import Image from 'next/image';
 import FooterTop from './FooterTop';
-import AppLink from './ui/AppLink';
+import AppLink from '../ui/AppLink';
 
 //utils
 import { useContext } from 'react';
-import logo_blue_cropped from '../public/images/logo_blue_cropped.png';
-import { Context } from '../context';
+import logo_blue_cropped from '../../public/images/logo_blue_cropped.png';
+import { Context } from '../../context';
 
 const Footer = () => {
   const {

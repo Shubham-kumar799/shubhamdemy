@@ -1,7 +1,7 @@
 //components
 import Image from 'next/image';
 import Link from 'next/link';
-import LoginForm from '../components/LoginForm';
+import { LoginForm } from '../components/Forms';
 
 //utils
 import { useContext, useEffect } from 'react';

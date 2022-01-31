@@ -1,40 +1,38 @@
 //components
-import { Spin } from 'antd';
+import Loader from './ui/Loader';
 import InstructorSingleCourseCard from './InstructorSingleCourseCard';
-import SideNav from './SideNav';
+import { SideNav } from './Nav';
 
 //utils
 import { useState, useEffect, useContext } from 'react';
 import { Context } from '../context';
-import axios from 'axios';
+import { useApi } from '../hooks';
 
 const InstructorCourses = () => {
   const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
+
   const { error } = useContext(Context);
+  const [res, API] = useApi({
+    url: '/api/instructor-courses',
+    method: 'get',
+  });
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        setLoading(true);
-        const { data } = await axios.get('/api/instructor-courses');
-        setCourses(data);
-      } catch (err) {
-        error({ msg: 'Error fetching courses. Try again' });
-        console.log('error fetching course', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCourses();
+    API({});
   }, []);
+
+  useEffect(() => {
+    if (res.data?.ok) {
+      setCourses(res.data?.message);
+    }
+    if (res.error) {
+      error({ msg: 'Error fetching courses. Try again' });
+    }
+  }, [res.error, res.data]);
   return (
     <SideNav>
-      {loading ? (
-        <div className="flex items-center justify-center h-screen">
-          <Spin />
-        </div>
+      {res.loading ? (
+        <Loader />
       ) : (
         <div className="flex flex-row">
           {courses &&

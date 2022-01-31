@@ -1,35 +1,40 @@
 //components
-import { Spin, Input, Form, Button } from 'antd';
+import { Input, Form, Button } from 'antd';
 
 //utils
 import { Context } from '../../context';
-import { useState, useContext } from 'react';
-import axios from 'axios';
+import { useState, useContext, useEffect } from 'react';
+import { useApi } from '../../hooks';
 
 //icons
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 
 const OtpForm = ({ email, prev, next }) => {
-  const [loading, setLoading] = useState(false);
   const [otpError, setOtpError] = useState(null);
   const { success } = useContext(Context);
+  const [res, API] = useApi({
+    url: '/api/verify-otp',
+    method: 'post',
+  });
 
-  const handleSubmit = async values => {
-    try {
-      console.log('Opt', values.otp);
-      setLoading(true);
-      const { data } = await axios.post('/api/verify-otp', {
+  const handleSubmit = values => {
+    API({
+      body: {
         email,
         Otp: values.otp,
-      });
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (res.data) {
       success({ msg: 'OTP Verification successful' });
       next();
-    } catch (err) {
-      setOtpError(err.response.data.message);
-    } finally {
-      setLoading(false);
     }
-  };
+    if (res.error) {
+      setOtpError(res.error?.response?.data?.message);
+    }
+  }, [res.data, res.error]);
 
   return (
     <>
@@ -53,8 +58,14 @@ const OtpForm = ({ email, prev, next }) => {
         </Form.Item>
         <div className="flex flex-row">
           <Form.Item className="w-full">
-            <Button type="primary" htmlType="submit" className="w-full mr-2">
-              {loading ? <Spin size="small" /> : 'Verify OTP'}
+            <Button
+              type="primary"
+              disabled={res.loading}
+              loading={res.loading}
+              htmlType="submit"
+              className="w-full mr-2"
+            >
+              Verify OTP
             </Button>
           </Form.Item>
           <Button onClick={() => prev()} className="w-full ml-2">

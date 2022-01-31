@@ -2,9 +2,9 @@
 import { Form, Input, Divider, Upload, Button, Progress, Switch } from 'antd';
 
 //utils
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useContext, useRef } from 'react';
 import axios from 'axios';
-import { Context } from '../context';
+import { Context } from '../../context';
 import ReactPlayer from 'react-player';
 
 //icons

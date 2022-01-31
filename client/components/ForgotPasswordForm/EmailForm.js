@@ -1,34 +1,41 @@
 //components
-import { Spin, Input, Form, Button } from 'antd';
+import { Input, Form, Button } from 'antd';
 
 //utlis
-import { useState, useContext } from 'react';
-import axios from 'axios';
+import { useState, useContext, useEffect } from 'react';
 import { Context } from '../../context';
+import { useApi } from '../../hooks';
 
 //icons
 import EmailIcon from '@mui/icons-material/Email';
 
 const EmailForm = ({ setEmail, next }) => {
-  const [loading, setLoading] = useState(false);
   const [forgotPasswordError, setForgotPasswordError] = useState(null);
   const { success } = useContext(Context);
+  const [res, API] = useApi({
+    url: '/api/forgot-password',
+    method: 'post',
+  });
 
-  const handleSubmit = async values => {
-    try {
-      setLoading(true);
-      const { data } = await axios.post('/api/forgot-password', {
+  const handleSubmit = values => {
+    API({
+      body: {
         email: values.email,
-      });
-      success({ msg: 'Check your email for OTP' });
-      setEmail(values.email);
-      next();
-    } catch (err) {
-      setForgotPasswordError(err.response.data.message);
-    } finally {
-      setLoading(false);
-    }
+      },
+    });
+    setEmail(values.email);
   };
+
+  useEffect(() => {
+    if (res.error) {
+      setForgotPasswordError(res?.error?.response?.data?.message);
+    }
+    if (res.data) {
+      success({ msg: 'Check your email for OTP' });
+      next();
+    }
+  }, [res.error, res.data]);
+
   return (
     <>
       <div className="bg-customError  text-white text-center mb-4">
@@ -54,8 +61,13 @@ const EmailForm = ({ setEmail, next }) => {
           />
         </Form.Item>
         <Form.Item>
-          <Button htmlType="submit" className="w-full">
-            {loading ? <Spin size="small" /> : 'Send OTP'}
+          <Button
+            loading={res.loading}
+            disabled={res.loading}
+            htmlType="submit"
+            className="w-full"
+          >
+            Send OTP
           </Button>
         </Form.Item>
       </Form>

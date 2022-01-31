@@ -1,7 +1,6 @@
 //components
 import {
   Form,
-  Spin,
   Input,
   Tag,
   Select,
@@ -9,8 +8,8 @@ import {
   Upload,
   Button,
   Divider,
-  InputNumber,
 } from 'antd';
+import Loader from '../../../../components/ui/Loader';
 
 //utils
 import { useState, useContext, useRef, useEffect } from 'react';
@@ -188,12 +187,7 @@ const CourseEdit = () => {
     setCategory(nextSelectedTags);
   };
 
-  if (loading)
-    return (
-      <div className="flex flex-1 h-screen items-center justify-center">
-        <Spin />
-      </div>
-    );
+  if (loading) return <Loader />;
 
   const handleFailed = values => {
     console.log('values ====> failed', values);

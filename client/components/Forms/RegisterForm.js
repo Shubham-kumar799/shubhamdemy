@@ -1,11 +1,10 @@
 //components
-import { Input, Form, Spin, Button } from 'antd';
+import { Input, Form, Button } from 'antd';
 
 //utils
-import { Context } from '../context';
-import { useState, useContext } from 'react';
-import axios from 'axios';
-import router from 'next/router';
+import { Context } from '../../context';
+import { useState, useContext, useEffect } from 'react';
+import { useApi } from '../../hooks';
 
 //icons
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -13,35 +12,37 @@ import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 
 const RegisterForm = () => {
-  const [loading, setLoading] = useState(false);
   const [registerError, setRegisterError] = useState(null);
   const { success, dispatch } = useContext(Context);
+  const [res, API] = useApi({
+    url: `/api/register`,
+    method: 'post',
+  });
 
-  const handleSubmit = async values => {
-    setLoading(true);
-    setRegisterError(null);
-
-    try {
-      const { data } = await axios.post(`/api/register`, {
+  const handleSubmit = values => {
+    API({
+      body: {
         username: values.username,
         email: values.email,
         password: values.password,
-      });
+      },
+    });
+  };
 
+  useEffect(() => {
+    if (res.data?.ok) {
       dispatch({
         type: 'LOGIN',
-        payload: data,
+        payload: res.data.user,
       });
-      // save in local storage
-      window.localStorage.setItem('user', JSON.stringify(data));
-      router.push('/user');
+      window.localStorage.setItem('user', JSON.stringify(res.data.user));
       success({ msg: 'Registration Successful' });
-    } catch (err) {
-      setRegisterError(err.response.data);
-    } finally {
-      setLoading(false);
     }
-  };
+
+    if (res.error) {
+      setRegisterError(apiError?.response?.data?.message);
+    }
+  }, [res.error, res.data]);
 
   return (
     <div className="flex flex-col w-2/3 sm:w-2/5 md:w-1/3">
@@ -112,8 +113,13 @@ const RegisterForm = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button disabled={loading} htmlType="submit" className="w-full">
-            {loading ? <Spin size="small" /> : 'Sign up'}
+          <Button
+            loading={res.loading}
+            disabled={res.loading}
+            htmlType="submit"
+            className="w-full"
+          >
+            Sign up
           </Button>
         </Form.Item>
       </Form>

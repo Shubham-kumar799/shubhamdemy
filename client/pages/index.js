@@ -1,5 +1,6 @@
 //components
 import { SingleCourseCard } from '../components/Home';
+import Loader from '../components/ui/Loader';
 
 //utils
 import { Spin } from 'antd';
@@ -9,9 +10,7 @@ const Index = ({ courses }) => {
   return (
     <>
       {!courses ? (
-        <div className="flex  h-screen justify-center items-center">
-          <Spin />
-        </div>
+        <Loader />
       ) : (
         <div className="grid grid-cols-2 gap-4">
           {courses?.map((course, index) => (

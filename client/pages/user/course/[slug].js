@@ -1,6 +1,6 @@
 //components
 import Loader from '../../../components/ui/Loader';
-import StudentNav from '../../../components/StudentNav';
+import { StudentNav } from '../../../components/Nav';
 import CheckUser from '../../../components/wrappers/CheckUser';
 
 //utils
