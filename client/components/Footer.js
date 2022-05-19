@@ -21,7 +21,7 @@ const Footer = () => {
           <div className="flex flex-col ">
             <AppLink title={'About us'} />
             <AppLink title={'Contact us'} />
-            <AppLink title={'Send Nudes'} />
+            {/* <AppLink title={'Send Nudes'} /> */}
             <AppLink title={'Email'} />
             <AppLink title={'Get the app'} />
           </div>

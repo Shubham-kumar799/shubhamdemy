@@ -6,6 +6,7 @@ import { Spin } from 'antd';
 import axios from 'axios';
 
 const Index = ({ courses }) => {
+  console.log('your courses', courses);
   return (
     <>
       {!courses ? (

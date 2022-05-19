@@ -20,6 +20,7 @@ mongoose
     // useFindAndModify: false,
     useUnifiedTopology: true,
     // useCreateIndex: false,
+    dbName: process.env.DB_NAME,
   })
   .then(() => {
     console.log('**db connected**');

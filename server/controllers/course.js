@@ -329,7 +329,7 @@ const takeDownCourse = async (req, res) => {
 
 const courses = async (req, res) => {
   try {
-    const all = await Course.find({ published: true })
+    const all = await Course.find()
       .select('-lessons')
       .populate('instructor', '_id username')
       .exec();
