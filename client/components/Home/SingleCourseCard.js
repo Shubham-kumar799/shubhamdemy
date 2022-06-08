@@ -1,7 +1,6 @@
 //components
 import { Card, Button, Typography, Divider, Badge, Tag } from 'antd';
 import Image from 'next/image';
-import ReactMarkdown from 'react-markdown';
 
 //utils
 import { currencyFormatter } from '../../utils/helpers';
@@ -13,7 +12,7 @@ const SingleCourseCard = ({ course }) => {
   const router = useRouter();
   return (
     <Badge.Ribbon
-      className="mr-4 mt-2"
+      className="mr-4"
       text={
         course.price != 0
           ? `${currencyFormatter({
@@ -27,7 +26,7 @@ const SingleCourseCard = ({ course }) => {
       <Card
         onClick={() => router.push(`/course/${course.slug}`)}
         bordered={false}
-        className="m-4"
+        className="border-2 m-4"
         hoverable
         actions={[
           <Button key="course" type="link">
@@ -35,9 +34,9 @@ const SingleCourseCard = ({ course }) => {
           </Button>,
         ]}
       >
-        <div className="flex flex-col w-full">
-          <div className="flex flex-row h-48">
-            <div className="items-center flex =justify-center">
+        <div className="flex flex-col">
+          <div className="flex flex-col">
+            <div className="items-center flex justify-center">
               <Image
                 height={225}
                 width={324}
@@ -51,9 +50,6 @@ const SingleCourseCard = ({ course }) => {
                 <p className=" font-light italic underline hover:text-customPrimary">
                   {course?.instructor?.username}
                 </p>
-              </div>
-              <div className="mt-2 overflow-auto scrollbar-hide">
-                <ReactMarkdown>{course.description}</ReactMarkdown>
               </div>
             </div>
           </div>

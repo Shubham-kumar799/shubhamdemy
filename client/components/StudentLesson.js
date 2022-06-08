@@ -44,13 +44,13 @@ const StudentLesson = ({ setCompleted, lesson, courseId, lessonCompleted }) => {
   };
 
   return (
-    <div>
-      <div className="m-2 flex items-center justify-center">
+    <div className="m-4">
+      <div className="flex items-center justify-center">
         <ReactPlayer
           url={lesson?.video?.Location}
           controls
-          width="80%"
-          height="50%"
+          width="100%"
+          height="80%"
           onEnded={() => markCompleted()}
         />
       </div>

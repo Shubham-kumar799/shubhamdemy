@@ -32,8 +32,9 @@ const InstructorSingleCourseCard = ({ course }) => {
     >
       <Card
         bordered={false}
-        className="m-2 mr-8 ml-0 mb-0"
+        className="m-2 "
         hoverable
+        size="small"
         cover={
           <Image
             height={225}
@@ -65,7 +66,7 @@ const InstructorSingleCourseCard = ({ course }) => {
       >
         <Text
           className="font-medium text-xl block"
-          style={{ width: 250 }}
+          style={{ width: 200 }}
           ellipsis={true}
         >
           {course.title}

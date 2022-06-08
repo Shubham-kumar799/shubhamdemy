@@ -2,6 +2,7 @@
 import Loader from '../../../components/ui/Loader';
 import StudentNav from '../../../components/StudentNav';
 import CheckUser from '../../../components/wrappers/CheckUser';
+import BaseLayout from '../../../components/ui/BaseLayout';
 
 //utils
 import { useRouter } from 'next/router';
@@ -35,9 +36,9 @@ const Course = () => {
       {loading ? (
         <Loader />
       ) : (
-        <StudentNav courseId={course?._id} lessons={course?.lessons}>
-          this is div ulhiguyf
-        </StudentNav>
+        <BaseLayout nostyles>
+          <StudentNav courseId={course?._id} lessons={course?.lessons} />
+        </BaseLayout>
       )}
     </CheckUser>
   );

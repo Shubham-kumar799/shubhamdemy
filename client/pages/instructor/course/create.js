@@ -9,6 +9,7 @@ import { useState } from 'react';
 //icons
 import { CloudUploadOutlined, ProfileOutlined } from '@ant-design/icons';
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
+import BaseLayout from '../../../components/ui/BaseLayout';
 
 const { Step } = Steps;
 
@@ -39,18 +40,14 @@ const CreateCourse = () => {
   };
 
   return (
-    <CheckInstructor>
-      <div className="flex items-center  flex-col ">
+    // <CheckInstructor>
+    <BaseLayout nostyles>
+      <div className="flex p-4 items-center   flex-col ">
         <h1 className="text-xl font-medium text-customPrimary  m-4 self-center">
           Let's upload a new Course
         </h1>
         <div>
-          <Steps
-            className=""
-            labelPlacement="vertical"
-            size="small"
-            current={current}
-          >
+          <Steps labelPlacement="vertical" size="small" current={current}>
             {steps.map(item => (
               <Step
                 className="mb-4"
@@ -72,7 +69,8 @@ const CreateCourse = () => {
           </div>
         </div>
       </div>
-    </CheckInstructor>
+    </BaseLayout>
+    // </CheckInstructor>
   );
 };
 

@@ -36,7 +36,7 @@ const InstructorCourses = () => {
           <Spin />
         </div>
       ) : (
-        <div className="flex flex-row">
+        <div className="flex flex-col sm:grid sm:grid-cols-2 lg:grid-cols-3 ">
           {courses &&
             courses.map(course => (
               <InstructorSingleCourseCard course={course} key={course.title} />

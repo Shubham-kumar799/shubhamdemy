@@ -1,6 +1,7 @@
 //components
 import ForgotPasswordForm from '../components/ForgotPasswordForm';
 import Image from 'next/image';
+import BaseLayout from '../components/ui/BaseLayout';
 
 //utils
 import { useContext, useEffect } from 'react';
@@ -19,10 +20,12 @@ const ForgotPassword = () => {
   }, [user]);
 
   return (
-    <div className="flex flex-col items-center">
-      <Image src={logoblue} alt="ShubhamDemy" height={125} width={175} />
-      <ForgotPasswordForm />
-    </div>
+    <BaseLayout>
+      <div className="flex flex-col items-center">
+        <Image src={logoblue} alt="ShubhamDemy" height={125} width={175} />
+        <ForgotPasswordForm />
+      </div>
+    </BaseLayout>
   );
 };
 

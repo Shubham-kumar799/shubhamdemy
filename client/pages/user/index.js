@@ -1,5 +1,6 @@
 //components
 import SideNav from '../../components/SideNav';
+import BaseLayout from '../../components/ui/BaseLayout';
 
 //utils
 import { useContext } from 'react';
@@ -10,7 +11,11 @@ const UserIndex = () => {
     state: { user },
   } = useContext(Context);
 
-  return <SideNav>yo</SideNav>;
+  return (
+    <BaseLayout nostyles>
+      <SideNav>yo</SideNav>
+    </BaseLayout>
+  );
 };
 
 export default UserIndex;

@@ -265,10 +265,8 @@ const CreateCourseForm = () => {
         </Upload>
       </Form.Item>
       <Form.Item
-        // valuePropName={category}
         rules={[
           {
-            // required: true,
             required: category.length != 0 ? false : true,
             message: 'Select category for your course',
           },
@@ -286,12 +284,7 @@ const CreateCourseForm = () => {
           </CheckableTag>
         ))}
       </Form.Item>
-      <Form.Item
-        wrapperCol={{
-          span: 12,
-          offset: 6,
-        }}
-      >
+      <Form.Item className="flex justify-end">
         <Button
           disabled={uploading}
           type="primary"

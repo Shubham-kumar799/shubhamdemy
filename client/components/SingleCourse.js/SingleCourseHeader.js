@@ -48,7 +48,7 @@ const SingleCourseHeader = ({
   }, [user, _id]);
 
   return (
-    <div className="flex flex-row justify-evenly  bg-black p-8 m-4 rounded-3xl">
+    <div className="flex flex-col md:flex-row justify-evenly  bg-black p-4 m-4 rounded-3xl">
       <div className="flex gap-y-6 flex-col">
         <div>
           <div>
@@ -113,7 +113,7 @@ const SingleCourseHeader = ({
           )}
         </div>
       </div>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center m-4 md:m-0 justify-center">
         <Image
           src={image?.Location}
           height={250}

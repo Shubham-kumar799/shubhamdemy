@@ -1,7 +1,6 @@
 //components
 import Link from 'next/link';
-import { Menu, Button } from 'antd';
-import AppButton from './ui/AppButton';
+import { Menu, Button, Dropdown, Space } from 'antd';
 
 //utils
 import { useState, useEffect, useContext } from 'react';
@@ -10,11 +9,15 @@ import { useRouter } from 'next/router';
 import { Context } from '../context';
 
 //icons
-import { AppstoreAddOutlined, TeamOutlined } from '@ant-design/icons';
+import {
+  AppstoreAddOutlined,
+  MenuOutlined,
+  TeamOutlined,
+} from '@ant-design/icons';
 
 const { Item } = Menu;
 
-const TopNav = props => {
+const TopMenu = props => {
   const [current, setCurrent] = useState('');
   const { state, dispatch, success } = useContext(Context);
   const { user } = state;
@@ -37,11 +40,7 @@ const TopNav = props => {
   };
 
   return (
-    <Menu
-      mode="horizontal"
-      className="z-10 sticky flex items-center top-0 font-medium"
-      selectedKeys={[current]}
-    >
+    <Menu {...props} className={props.menustyles} selectedKeys={[current]}>
       <Item
         {...props}
         className="no-underline"
@@ -80,10 +79,9 @@ const TopNav = props => {
           </Item>
         </>
       )}
-      <div className="absolute flex flex-row right-2">
+      <div className={props.rightmenustyles}>
         {user && user.role && user.role.includes('Instructor') ? (
           <Button
-            {...props}
             onClick={() => router.push('/instructor/course/create')}
             className="mr-8"
             shape="round"
@@ -93,7 +91,6 @@ const TopNav = props => {
           </Button>
         ) : (
           <Button
-            {...props}
             color="blue"
             onClick={() => router.push('/user/become-instructor')}
             shape="round"
@@ -111,6 +108,36 @@ const TopNav = props => {
         )}
       </div>
     </Menu>
+  );
+};
+
+const TopNav = () => {
+  return (
+    <div className="sticky  top-0 z-50">
+      <div className="p-4 bg-white sm:hidden">
+        <Dropdown
+          arrow={{ pointAtCenter: true }}
+          overlay={
+            <TopMenu
+              menustyles="w-screen"
+              rightmenustyles="flex flex-row justify-between m-2"
+            />
+          }
+          trigger={['click']}
+        >
+          <Space>
+            <MenuOutlined className="text-lg" />
+          </Space>
+        </Dropdown>
+      </div>
+      <div className="hidden sm:block">
+        <TopMenu
+          mode={'horizontal'}
+          menustyles="flex items-center font-medium "
+          rightmenustyles="absolute flex flex-row right-2"
+        />
+      </div>
+    </div>
   );
 };
 

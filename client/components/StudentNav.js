@@ -9,6 +9,7 @@ import axios from 'axios';
 
 //icons
 import AddTaskIcon from '@mui/icons-material/AddTask';
+import Image from 'next/image';
 
 const { Content, Sider } = Layout;
 
@@ -83,7 +84,17 @@ const StudentNav = ({ lessons, courseId }) => {
       >
         <Content style={{ margin: '0 16px' }}>
           {current == -1 ? (
-            'Lets get STarted'
+            <div className="flex flex-col items-center h-screen justify-center">
+              <Image
+                width={400}
+                height={400}
+                objectFit="contain"
+                src="/images/start.png"
+              />
+              <p className="font-medium m-20 text-lg text-center">
+                Let's start learning
+              </p>
+            </div>
           ) : (
             <StudentLesson
               setCompleted={setCompleted}

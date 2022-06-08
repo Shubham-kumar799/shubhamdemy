@@ -40,7 +40,7 @@ const listData = [
 
 const SingleCourseDescription = ({ description, lessons }) => {
   return (
-    <div className="m-4 flex  items-start justify-evenly">
+    <div className="m-4 flex flex-col md:flex-row ">
       <div className="flex flex-col flex-1">
         <Card
           title={

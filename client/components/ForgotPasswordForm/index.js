@@ -52,9 +52,9 @@ const ForgotPasswordForm = () => {
   };
 
   return (
-    <div className="flex  flex-col w-max">
+    <div className="flex  flex-col">
       <h1 className="text-xl mt-4">Let's reset your password...</h1>
-      <div className="bg-black w-full h-1 mb-4"></div>
+      <div className="bg-black  h-1 mb-4"></div>
       <div className="">
         <Steps
           className=""
