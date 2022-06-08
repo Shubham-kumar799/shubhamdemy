@@ -13,7 +13,9 @@ const FooterTop = () => {
             Learn from the best instructor from across the globe
           </h2>
         </div>
-        <AppButton title={'Get Started'} />
+        <div className="flex justify-end">
+          <AppButton title={'Get Started'} />
+        </div>
       </div>
     </div>
   );

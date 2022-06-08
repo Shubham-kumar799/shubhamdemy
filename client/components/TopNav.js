@@ -39,7 +39,7 @@ const TopNav = props => {
   return (
     <Menu
       mode="horizontal"
-      className="items-center z-10 sticky top-0 flex font-medium"
+      className="z-10 sticky flex items-center top-0 font-medium"
       selectedKeys={[current]}
     >
       <Item
