@@ -2,7 +2,6 @@ import TopNav from '../TopNav';
 import Footer from '../Footer';
 
 const BaseLayout = ({ children, nostyles }) => {
-  console.log('no styles', nostyles);
   return (
     <>
       <TopNav />
